@@ -24,5 +24,6 @@
 
 
 $string['uploadusers:name'] = 'Upload Users local plugin';
+$string['uploadusers:pagetitle'] = "Upload users via csv/txt file";
 
 
