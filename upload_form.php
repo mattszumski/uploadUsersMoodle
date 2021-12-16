@@ -31,6 +31,22 @@
 
 
     
-    class local_upload_form extends moodleform {
+    class upload_form extends moodleform {
+
+        public function definition() {
+            global $CFG;
+
+            $mform = $this->_form;
+
+            $options = array(
+                'maxbytes' => 5242880,
+                'accepted_types' => array('csv','txt')
+            );
+
+            $mform->addElement('filepicker',  'attachementUpload',  'myfiles',  null, $options);
+            $this->add_action_buttons(false,'Upload');
+        }
+
+        
 
     }

@@ -29,7 +29,6 @@
 
     defined('MOODLE_INTERNAL') || die();
 
-    class local_uploadusers_plugin {
-        const PLUGIN_NAME = "local_uploadusers";
-        const PLUGIN_FILEAREA = 'uploads';
-    }
+    // class local_uploadusers_plugin {
+    //     const PLUGIN_NAME = "local_uploadusers";
+    // }

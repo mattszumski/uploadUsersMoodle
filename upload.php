@@ -28,6 +28,74 @@
 
     require_once(__DIR__ . '/../../config.php');
     require_once(__DIR__ . '/upload_form.php');
+    require_once(__DIR__ . '/lib.php');
 
-    $page_title = get_string("uploadusers:pagetitle", local_uploadusers_plugin::PLUGIN_NAME);
+    $page_title = get_string("uploadusers:pagetitle", 'local_uploadusers');
+    $context = context_system::instance();
+  
+    require_login();
+
+    //TODO
+    //Looks fine but throws an error -> check why
+    //     require_capability('local/uploaduser:canupload', context_system::instance());
+    
+
+
+    $PAGE->set_url(new moodle_url('/local/uploadusers/upload.php'));
+    $PAGE->set_context($context);
+    $PAGE->set_title($page_title);
+
+    $mform = new upload_form();
+
+
+    echo $OUTPUT->header();
+
+
+    if($formdata = $mform->get_data()) {
+        $contextId = $context->id;
+    $formItemName = 'attachementUpload';
+    $filearea = 'draft';
+    $componentName = 'local_uploadusers';
+    $filepath = '/';
+    $filename = null; // get it from uploaded file
+    $itemIdNew = $formdata->attachementUpload;
+    
+    $mform->save_stored_file($formItemName, $contextId, $componentName,$filearea,$itemIdNew,$filepath,$filename);
+    
+    $files = get_file_storage()->get_area_files($contextId, $componentName, $filearea, $itemIdNew);
+
+    
+
+    $file = end($files);
+
+    $csvArray = array();
+
+    $openFile = $file->get_content_file_handle();
+
+    if ($openFile != null) {
+        while($line = fgets($openFile)) {
+            $csvArray[] = str_getcsv($line);
+        }
+        
+    } else {
+        echo 'nope.';
+    }
+    
+    fclose($openFile);
+
+    echo 'FILE READ: <br>';
+    var_dump($csvArray);
+
+    //TODO call for validation
+    //TODO call for insert into db
+        
+    } else {
+
+        $mform->set_data($data);
+        $mform->display();
+    }
+
+
+    echo $OUTPUT->footer();
+
     
