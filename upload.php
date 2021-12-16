@@ -26,9 +26,13 @@
      * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
      */
 
+
+    use local_uploadusers\Check_upload;
+
     require_once(__DIR__ . '/../../config.php');
     require_once(__DIR__ . '/upload_form.php');
     require_once(__DIR__ . '/lib.php');
+
 
     $page_title = get_string("uploadusers:pagetitle", 'local_uploadusers');
     $context = context_system::instance();
@@ -76,17 +80,32 @@
         while($line = fgets($openFile)) {
             $csvArray[] = str_getcsv($line);
         }
-        
     } else {
-        echo 'nope.';
+        echo 'Error during opening uploaded file.';
     }
     
     fclose($openFile);
 
-    echo 'FILE READ: <br>';
-    var_dump($csvArray);
+    $checkObj = new check_upload($csvArray);
+    $checkObj->perform_checks();
+
+
 
     //TODO call for validation
+
+    function test_print($value, $key) {
+        echo sprintf( "%s: %s <br>" , $key , $value );
+    }
+
+    $checks = new Check_upload($csvArray);
+    $result = $checks->perform_checks();
+    echo "Array Success: <br>";
+    array_walk_recursive($result->successfullyChecked, 'test_print');
+    echo "<br> Array Error: <br>";
+    array_walk_recursive($result->errors, 'test_print');
+    echo "<br> Array Warning: <br>";
+    array_walk_recursive($result->warnings, 'test_print');
+
     //TODO call for insert into db
         
     } else {
