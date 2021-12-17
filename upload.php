@@ -28,6 +28,7 @@
 
 
     use local_uploadusers\Check_upload;
+    use local_uploadusers\Insert_upload;
 
     require_once(__DIR__ . '/../../config.php');
     require_once(__DIR__ . '/upload_form.php');
@@ -93,20 +94,13 @@
 
     //TODO call for validation
 
-    function test_print($value, $key) {
-        echo sprintf( "%s: %s <br>" , $key , $value );
-    }
-
     $checks = new Check_upload($csvArray);
     $result = $checks->perform_checks();
-    echo "Array Success: <br>";
-    array_walk_recursive($result->successfullyChecked, 'test_print');
-    echo "<br> Array Error: <br>";
-    array_walk_recursive($result->errors, 'test_print');
-    echo "<br> Array Warning: <br>";
-    array_walk_recursive($result->warnings, 'test_print');
 
     //TODO call for insert into db
+
+    $insertIntoDB = new Insert_upload($result->successfullyChecked);
+    $DBResult = $insertIntoDB->insertUploadIntoDB();
         
     } else {
 
