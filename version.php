@@ -24,6 +24,6 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version  = 2021120805;
+$plugin->version  = 2021121700;
 $plugin->requires = 2019111200;
 $plugin->component = 'local_uploadusers';
