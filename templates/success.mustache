@@ -1,0 +1,18 @@
+<h1>Summary:</h1>
+<div>
+    <p>Errors in below rows:</p>
+    <ol>
+        {{# errors}}
+        <li>Username: {{0}}, email: {{1}}, First Name: {{2}}, Last Name: {{3}}, Employee Number {{4}}, Organizational Unit: {{5}}, Position {{6}}</li>
+        {{/ errors}}
+    </ol>
+</div>
+<div>
+    <p>Below rows have some missing data: (rows has been uploaded)</p>
+    <ol>
+        {{# warnings}}
+        <li>Username: {{0}}, email: {{1}}, First Name: {{2}}, Last Name: {{3}}, Employee Number {{4}}, Organizational Unit: {{5}}, Position {{6}}</li>
+        {{/ warnings}}
+    </ol>
+</div>
+<p><a href="{{url}}">Back to the upload page</a></p>

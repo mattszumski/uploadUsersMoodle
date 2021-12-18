@@ -101,6 +101,10 @@ defined ('MOODLE_INTERNAL') || die();
                 $tableInsertRow->email = $row[1];
                 $tableInsertRow->firstname = $row[2];
                 $tableInsertRow->lastname = $row[3];
+                $tableInsertRow->employee_number = null;
+                $tableInsertRow->organizational_unit_id = null;
+                $tableInsertRow->position_id = null;
+
                 if(!empty($row[4])) {
                     $tableInsertRow->employee_number = $row[4];
                 }

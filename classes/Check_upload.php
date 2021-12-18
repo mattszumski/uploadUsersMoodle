@@ -11,10 +11,9 @@
  namespace local_uploadusers;
 
  class Check_upload {
-     
+        
     private $arrayToCheck = null;
     private $checks = null;
-    private $badRows = null;
 
     public function __construct($csvArray) {
         $this->arrayToCheck = $csvArray;
@@ -25,6 +24,7 @@
     }
 
     public function perform_checks() {
+        global $DB;
         $arrayLength = count($this->arrayToCheck);
         $usernames = array();
 
@@ -38,10 +38,12 @@
             if($this->checkIfUsernameIsDoubled($usernames, $i)) {
                 continue;
             }
+            if($this->checkUsernamesAgainstDB($i)){
+                continue;
+            }
             $this->checkIfOptionalColumnsAreFilled($i);
         }
         $this->checks->successfullyChecked = array_values($this->arrayToCheck);
-
 
         return $this->checks;
     }
@@ -71,6 +73,17 @@
             return 1;
         }
         array_push($usernames, $usernameFromFile);
+        return 0;
+    }
+
+    //function checks user table for usernames in csv file - removes row if username is already in DB
+    private function checkUsernamesAgainstDB($i) {
+        global $DB;
+        $usernameFromFile = $this->arrayToCheck[$i][0];
+        if($adminUser = $DB->get_record('user', ['username' => $usernameFromFile]) !== false) {
+            $this->moveRowToErrors($i);
+            return 1;
+        }
         return 0;
     }
 

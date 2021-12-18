@@ -55,50 +55,61 @@
 
     if($formdata = $mform->get_data()) {
         $contextId = $context->id;
-    $formItemName = 'attachementUpload';
-    $filearea = 'draft';
-    $componentName = 'local_uploadusers';
-    $filepath = '/';
-    $filename = null; // get it from uploaded file
-    $itemIdNew = $formdata->attachementUpload;
-    
-    $mform->save_stored_file($formItemName, $contextId, $componentName,$filearea,$itemIdNew,$filepath,$filename);
-    
-    $files = get_file_storage()->get_area_files($contextId, $componentName, $filearea, $itemIdNew);
-
-    
-
-    $file = end($files);
-
-    $csvArray = array();
-
-    $openFile = $file->get_content_file_handle();
-
-    if ($openFile != null) {
-        while($line = fgets($openFile)) {
-            $csvArray[] = str_getcsv($line);
-        }
-    } else {
-        echo 'Error during opening uploaded file.';
-    }
-    
-    fclose($openFile);
-
-    $checkObj = new check_upload($csvArray);
-    $checkObj->perform_checks();
-
-
-
-    //TODO call for validation
-
-    $checks = new Check_upload($csvArray);
-    $result = $checks->perform_checks();
-
-    //TODO call for insert into db
-
-    $insertIntoDB = new Insert_upload($result->successfullyChecked);
-    $DBResult = $insertIntoDB->insertUploadIntoDB();
+        $formItemName = 'attachementUpload';
+        $filearea = 'draft';
+        $componentName = 'local_uploadusers';
+        $filepath = '/';
+        $filename = null; // get it from uploaded file
+        $itemIdNew = $formdata->attachementUpload;
         
+        $mform->save_stored_file($formItemName, $contextId, $componentName,$filearea,$itemIdNew,$filepath,$filename);
+        
+        $files = get_file_storage()->get_area_files($contextId, $componentName, $filearea, $itemIdNew);
+
+        $file = end($files);
+
+        if($file->get_filesize() > 5242880) {
+            $fileTooBigData = (object)[
+                'error' => "File is larger than 5mb. Please upload smaller file.",
+                'url' =>new moodle_url('/local/uploadusers/upload.php')
+            ];
+    
+            echo $OUTPUT->render_from_template('local_uploadusers/filetoobig', $fileTooBigData);
+        } else {
+
+        $csvArray = array();
+
+        $openFile = $file->get_content_file_handle();
+
+        if ($openFile != null) {
+            while($line = fgets($openFile)) {
+                $csvArray[] = str_getcsv($line);
+            }
+        } else {
+            echo 'Error during opening uploaded file.';
+        }
+        
+        fclose($openFile);
+
+        //TODO call for validation
+
+        $checks = new Check_upload($csvArray);
+        $result = $checks->perform_checks();
+
+        //TODO call for insert into db
+
+        $insertIntoDB = new Insert_upload($result->successfullyChecked);
+        $DBResult = $insertIntoDB->insertUploadIntoDB();
+
+        $successData = (object)[
+            'errors' => $result->errors,
+            'warnings' => $result->warnings,
+            'url' =>new moodle_url('/local/uploadusers/upload.php')
+        ];
+    
+        echo $OUTPUT->render_from_template('local_uploadusers/success', $successData);
+        }
+
     } else {
 
         $mform->set_data($data);
