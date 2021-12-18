@@ -39,10 +39,7 @@
     $context = context_system::instance();
   
     require_login();
-
-    //TODO
-    //Looks fine but throws an error -> check why
-    //     require_capability('local/uploaduser:canupload', context_system::instance());
+    require_capability('local/uploadusers:canupload', context_system::instance());
     
 
 
