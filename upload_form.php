@@ -43,7 +43,7 @@
                 'accepted_types' => array('csv','txt')
             );
 
-            $mform->addElement('filepicker',  'attachementUpload',  'myfiles',  null, $options);
+            $mform->addElement('filepicker',  'attachementUpload',  'upload',  null, $options);
             $this->add_action_buttons(false,'Upload');
         }
 

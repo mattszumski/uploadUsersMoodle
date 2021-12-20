@@ -1,0 +1,6 @@
+List of things that can be improved:
+1. Error msgs -> split for categories, so user knows what kind of error he/she is dealing with
+2. Improvement of the msg ( css)
+3. Information to user how many rows have been correctly set up
+4. Checking db for organizational unit & position before inserting - now they could duplicate
+5. Improvements of the landing page (css)

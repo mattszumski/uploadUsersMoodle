@@ -111,6 +111,22 @@
         }
 
     } else {
+        
+        echo <<<END
+            <h1> Upload users by csv/txt file</h1>
+            <p> Please be advised that other types will not be accepted and maximum size of the file is 5MB. </p>
+            <p>Columns must be passed in the following manner: <p>
+            <ol>
+            <li>username </li>
+            <li>email</li>
+            <li>first name</li>
+            <li>last name</li>
+            <li>employee number</li>
+            <li>organizational unit</li>
+            <li>position</li>
+            </ol>
+            <p>Columns 1-4 are required. Usernames already in the database won't be added and be marked as error.</p>
+        END;
 
         $mform->set_data($data);
         $mform->display();
